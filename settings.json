@@ -1,0 +1,13 @@
+{
+  "defaultModel": "deepseek-v4-flash",
+  "defaultProvider": "opencode-go",
+  "defaultThinkingLevel": "high",
+  "enabledModels": [
+    "opencode-go/deepseek-v4-flash",
+    "opencode-go/deepseek-v4-pro",
+    "opencode-go/kimi-k2.6",
+    "opencode-go/minimax-m2.7"
+  ],
+  "hideThinkingBlock": true,
+  "theme": "kanagawa-wave"
+}

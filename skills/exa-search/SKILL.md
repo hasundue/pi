@@ -9,7 +9,7 @@ description: |
 # Exa Search
 
 Neural web search and content extraction powered by [Exa](https://exa.ai). Uses
-the official `exa-js` SDK (pinned to `2.12.1`) via a Deno helper script.
+the official `exa-js` SDK (pinned to `2.12.1`) via Deno helper scripts.
 
 ## Setup
 
@@ -39,34 +39,34 @@ Basic search with highlights (token-efficient excerpts — ideal for LLM
 workflows):
 
 ```bash
-./search.ts "your search query"
+./scripts/search.ts "your search query"
 ```
 
 Customize number of results and search type:
 
 ```bash
-./search.ts "query" --num-results 5 --type auto
+./scripts/search.ts "query" --num-results 5 --type auto
 # Types: auto, fast, instant, deep-lite, deep, deep-reasoning
 ```
 
 Disable highlights to reduce token usage:
 
 ```bash
-./search.ts "query" --highlights false
+./scripts/search.ts "query" --highlights false
 # or
-./search.ts "query" --no-highlights
+./scripts/search.ts "query" --no-highlights
 ```
 
 Get full page text content (use `maxCharacters` to control token cost):
 
 ```bash
-./search.ts "query" --text --max-chars 5000
+./scripts/search.ts "query" --text --max-chars 5000
 ```
 
 Summaries per result:
 
 ```bash
-./search.ts "query" --summary
+./scripts/search.ts "query" --summary
 ```
 
 ## Output Modes
@@ -75,7 +75,7 @@ Output is compact by default (strips `requestId`, `resolvedSearchType`, empty
 `highlightScores`). Use `--verbose` for full output:
 
 ```bash
-./search.ts "query" --verbose
+./scripts/search.ts "query" --verbose
 ```
 
 ## Content Extraction
@@ -83,13 +83,19 @@ Output is compact by default (strips `requestId`, `resolvedSearchType`, empty
 Get clean content for URLs you already have:
 
 ```bash
-./search.ts --urls https://example.com/article https://example.com/blog
+./scripts/fetch.ts https://example.com/article https://example.com/blog
 ```
 
 With freshness control (livecrawl if cached content is older than N hours):
 
 ```bash
-./search.ts --urls https://example.com --max-age-hours 24
+./scripts/fetch.ts https://example.com --max-age-hours 24
+```
+
+Get full page text (not just highlights):
+
+```bash
+./scripts/fetch.ts https://example.com --text --max-chars 5000
 ```
 
 ## Structured Outputs (outputSchema)
@@ -97,7 +103,7 @@ With freshness control (livecrawl if cached content is older than N hours):
 Get grounded structured JSON from search results with field-level citations:
 
 ```bash
-./search.ts "query" --schema '
+./scripts/search.ts "query" --schema '
 {
   "type": "object",
   "properties": {
@@ -117,17 +123,19 @@ The response includes `output.content` (structured JSON) and `output.grounding`
 Target specific sources or exclude low-quality domains:
 
 ```bash
-./search.ts "query" --include-domains arxiv.org,github.com
-./search.ts "query" --exclude-domains pinterest.com,medium.com
+./scripts/search.ts "query" --include-domains arxiv.org,github.com
+./scripts/search.ts "query" --exclude-domains pinterest.com,medium.com
 ```
 
 ## Date Filtering
 
 ```bash
-./search.ts "query" --start-published-date 2025-01-01 --end-published-date 2025-12-31
+./scripts/search.ts "query" --start-published-date 2025-01-01 --end-published-date 2025-12-31
 ```
 
 ## All Options
+
+### `scripts/search.ts`
 
 | Flag                     | Default | Description                                                                   |
 | ------------------------ | ------- | ----------------------------------------------------------------------------- |
@@ -144,8 +152,18 @@ Target specific sources or exclude low-quality domains:
 | `--exclude-domains`      | —       | Comma-separated list of domains to exclude                                    |
 | `--start-published-date` | —       | ISO date string (e.g. `2024-01-01`)                                           |
 | `--end-published-date`   | —       | ISO date string                                                               |
-| `--max-age-hours`        | —       | Max age of cached content in hours (0 = always livecrawl, -1 = cache only)    |
-| `--urls`                 | —       | Space-separated list of URLs to extract content from (uses `/contents`)       |
+| `--max-age-hours`        | —       | Max age of cached content in hours (0 = livecrawl, -1 = cache only)           |
+
+### `scripts/fetch.ts`
+
+| Flag              | Default | Description                                                         |
+| ----------------- | ------- | ------------------------------------------------------------------- |
+| `--text`          | `false` | Include full page text                                              |
+| `--max-chars`     | `2000`  | Max characters per page when `--text` is set                        |
+| `--highlights`    | `true`  | Include relevant excerpts                                           |
+| `--no-highlights` | —       | Disable highlights                                                  |
+| `--max-age-hours` | —       | Max age of cached content in hours (0 = livecrawl, -1 = cache only) |
+| `--verbose`       | `false` | Include verbose fields                                              |
 
 ## Reference
 
