@@ -69,8 +69,9 @@
         let
           inherit (pkgs.stdenv.hostPlatform) system;
           treefmt = treefmt-nix.lib.mkWrapper pkgs {
-            programs.nixfmt = {
-              enable = true;
+            programs = {
+              deno.enable = true;
+              nixfmt.enable = true;
             };
           };
           git-hooks = git-hooks-nix.lib.${system}.run {
