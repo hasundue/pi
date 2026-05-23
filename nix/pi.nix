@@ -8,9 +8,13 @@
         "--no-themes"
       ];
     extensions = [
+      # ../extensions
       ../extensions/footer.ts
-      ../extensions/messages.ts
+      # ../extensions/messages.ts
       ../extensions/temperature.ts
+    ];
+    skills = [
+      ../skills/exa-search
     ];
   };
 }
