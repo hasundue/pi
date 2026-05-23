@@ -52,29 +52,15 @@
       apps = forAllSystems (
         system: pkgs:
         let
-          my-pi = pi-nix.lib.mkCodingAgent {
+          pi = pi-nix.lib.mkCodingAgent {
             inherit pkgs;
-            modules = [
-              {
-                pi.coding-agent = {
-                  extraArgs = [
-                    "--no-extensions"
-                    "--no-skills"
-                  ];
-                  extensions = [
-                    ./extensions/footer.ts
-                    ./extensions/messages.ts
-                    ./extensions/temperature.ts
-                  ];
-                };
-              }
-            ];
+            modules = [ ./nix/pi.nix ];
           };
         in
         {
           default = {
             type = "app";
-            program = "${my-pi.package}/bin/pi";
+            program = "${pi.package}/bin/pi";
           };
         }
       );
