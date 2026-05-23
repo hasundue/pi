@@ -33,40 +33,38 @@ Get an API key at [dashboard.exa.ai](https://dashboard.exa.ai).
 
 ## Search
 
-> Run commands from this directory (`~/.pi/agent/skills/exa-search/`).
-
 Basic search with highlights (token-efficient excerpts — ideal for LLM
 workflows):
 
-```bash
-./scripts/search.ts "your search query"
+```
+scripts/search.ts "your search query"
 ```
 
 Customize number of results and search type:
 
-```bash
-./scripts/search.ts "query" --num-results 5 --type auto
+```
+scripts/search.ts "query" --num-results 5 --type auto
 # Types: auto, fast, instant, deep-lite, deep, deep-reasoning
 ```
 
 Disable highlights to reduce token usage:
 
-```bash
-./scripts/search.ts "query" --highlights false
+```
+scripts/search.ts "query" --highlights false
 # or
-./scripts/search.ts "query" --no-highlights
+scripts/search.ts "query" --no-highlights
 ```
 
 Get full page text content (use `maxCharacters` to control token cost):
 
-```bash
-./scripts/search.ts "query" --text --max-chars 5000
+```
+scripts/search.ts "query" --text --max-chars 5000
 ```
 
 Summaries per result:
 
-```bash
-./scripts/search.ts "query" --summary
+```
+scripts/search.ts "query" --summary
 ```
 
 ## Output Modes
@@ -74,36 +72,36 @@ Summaries per result:
 Output is compact by default (strips `requestId`, `resolvedSearchType`, empty
 `highlightScores`). Use `--verbose` for full output:
 
-```bash
-./scripts/search.ts "query" --verbose
+```
+scripts/search.ts "query" --verbose
 ```
 
 ## Content Extraction
 
 Get clean content for URLs you already have:
 
-```bash
-./scripts/fetch.ts https://example.com/article https://example.com/blog
+```
+scripts/fetch.ts https://example.com/article https://example.com/blog
 ```
 
 With freshness control (livecrawl if cached content is older than N hours):
 
-```bash
-./scripts/fetch.ts https://example.com --max-age-hours 24
+```
+scripts/fetch.ts https://example.com --max-age-hours 24
 ```
 
 Get full page text (not just highlights):
 
-```bash
-./scripts/fetch.ts https://example.com --text --max-chars 5000
+```
+scripts/fetch.ts https://example.com --text --max-chars 5000
 ```
 
 ## Structured Outputs (outputSchema)
 
 Get grounded structured JSON from search results with field-level citations:
 
-```bash
-./scripts/search.ts "query" --schema '
+```
+scripts/search.ts "query" --schema '
 {
   "type": "object",
   "properties": {
@@ -122,15 +120,15 @@ The response includes `output.content` (structured JSON) and `output.grounding`
 
 Target specific sources or exclude low-quality domains:
 
-```bash
-./scripts/search.ts "query" --include-domains arxiv.org,github.com
-./scripts/search.ts "query" --exclude-domains pinterest.com,medium.com
+```
+scripts/search.ts "query" --include-domains arxiv.org,github.com
+scripts/search.ts "query" --exclude-domains pinterest.com,medium.com
 ```
 
 ## Date Filtering
 
-```bash
-./scripts/search.ts "query" --start-published-date 2025-01-01 --end-published-date 2025-12-31
+```
+scripts/search.ts "query" --start-published-date 2025-01-01 --end-published-date 2025-12-31
 ```
 
 ## All Options
