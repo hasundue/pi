@@ -10,7 +10,16 @@
  */
 
 import type { ExtensionAPI, Theme } from "@earendil-works/pi-coding-agent";
-import { renderDiff } from "@earendil-works/pi-coding-agent";
+import {
+  createBashTool,
+  createEditTool,
+  createFindTool,
+  createGrepTool,
+  createLsTool,
+  createReadTool,
+  createWriteTool,
+  renderDiff,
+} from "@earendil-works/pi-coding-agent";
 import { Box, Text } from "@earendil-works/pi-tui";
 import { homedir } from "os";
 
@@ -90,8 +99,38 @@ function shortenPath(path: string): string {
   return shortenNixPaths(path);
 }
 
+// ---------------------------------------------------------------------------
+// Cached built-in tools (keyed by cwd)
+// ---------------------------------------------------------------------------
+
+const toolCache = new Map<string, ReturnType<typeof createBuiltInTools>>();
+
+function createBuiltInTools(cwd: string) {
+  return {
+    read: createReadTool(cwd),
+    bash: createBashTool(cwd),
+    edit: createEditTool(cwd),
+    write: createWriteTool(cwd),
+    find: createFindTool(cwd),
+    grep: createGrepTool(cwd),
+    ls: createLsTool(cwd),
+  };
+}
+
+function getBuiltInTools(cwd: string) {
+  let tools = toolCache.get(cwd);
+  if (!tools) {
+    tools = createBuiltInTools(cwd);
+    toolCache.set(cwd, tools);
+  }
+  return tools;
+}
 
 export default function (pi: ExtensionAPI) {
+  // Get built-in tool definitions from registry (avoids creating instances at registration time)
+  const allTools = pi.getAllTools();
+  const byName = new Map(allTools.map((t) => [t.name, t]));
+
   // =========================================================================
   // Setup
   // =========================================================================
@@ -125,6 +164,13 @@ export default function (pi: ExtensionAPI) {
   pi.registerTool({
     name: "read",
     label: "read",
+    description: byName.get("read")!.description,
+    parameters: byName.get("read")!.parameters,
+
+    async execute(toolCallId, params, signal, onUpdate, ctx) {
+      const tools = getBuiltInTools(ctx.cwd);
+      return tools.read.execute(toolCallId, params, signal, onUpdate);
+    },
 
     renderCall(args, theme, _context) {
       const path = shortenPath(args.path || "");
@@ -173,6 +219,13 @@ export default function (pi: ExtensionAPI) {
   pi.registerTool({
     name: "bash",
     label: "bash",
+    description: byName.get("bash")!.description,
+    parameters: byName.get("bash")!.parameters,
+
+    async execute(toolCallId, params, signal, onUpdate, ctx) {
+      const tools = getBuiltInTools(ctx.cwd);
+      return tools.bash.execute(toolCallId, params, signal, onUpdate);
+    },
 
     renderCall(args, theme, context) {
       const command = args.command || "...";
@@ -231,6 +284,13 @@ export default function (pi: ExtensionAPI) {
   pi.registerTool({
     name: "write",
     label: "write",
+    description: byName.get("write")!.description,
+    parameters: byName.get("write")!.parameters,
+
+    async execute(toolCallId, params, signal, onUpdate, ctx) {
+      const tools = getBuiltInTools(ctx.cwd);
+      return tools.write.execute(toolCallId, params, signal, onUpdate);
+    },
 
     renderCall(args, theme, _context) {
       const path = shortenPath(args.path || "");
@@ -281,7 +341,13 @@ export default function (pi: ExtensionAPI) {
   pi.registerTool({
     name: "edit",
     label: "edit",
-    renderShell: "self",
+    description: byName.get("edit")!.description,
+    parameters: byName.get("edit")!.parameters,
+
+    async execute(toolCallId, params, signal, onUpdate, ctx) {
+      const tools = getBuiltInTools(ctx.cwd);
+      return tools.edit.execute(toolCallId, params, signal, onUpdate);
+    },
 
     renderCall(args, theme, context) {
       // Reuse the Box across renders so its state persists
@@ -363,6 +429,13 @@ export default function (pi: ExtensionAPI) {
   pi.registerTool({
     name: "find",
     label: "find",
+    description: byName.get("find")!.description,
+    parameters: byName.get("find")!.parameters,
+
+    async execute(toolCallId, params, signal, onUpdate, ctx) {
+      const tools = getBuiltInTools(ctx.cwd);
+      return tools.find.execute(toolCallId, params, signal, onUpdate);
+    },
 
     renderCall(args, theme, context) {
       const pattern = args.pattern || "";
@@ -421,6 +494,13 @@ export default function (pi: ExtensionAPI) {
   pi.registerTool({
     name: "grep",
     label: "grep",
+    description: byName.get("grep")!.description,
+    parameters: byName.get("grep")!.parameters,
+
+    async execute(toolCallId, params, signal, onUpdate, ctx) {
+      const tools = getBuiltInTools(ctx.cwd);
+      return tools.grep.execute(toolCallId, params, signal, onUpdate);
+    },
 
     renderCall(args, theme, context) {
       const pattern = args.pattern || "";
@@ -486,6 +566,13 @@ export default function (pi: ExtensionAPI) {
   pi.registerTool({
     name: "ls",
     label: "ls",
+    description: byName.get("ls")!.description,
+    parameters: byName.get("ls")!.parameters,
+
+    async execute(toolCallId, params, signal, onUpdate, ctx) {
+      const tools = getBuiltInTools(ctx.cwd);
+      return tools.ls.execute(toolCallId, params, signal, onUpdate);
+    },
 
     renderCall(args, theme, context) {
       const path = shortenPath(args.path || ".");
