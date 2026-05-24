@@ -1,60 +1,61 @@
-{ pkgs, lib, ... }:
+{ lib, ... }:
+let
+  store = dir: file: "${dir}/${file}";
+  storeMany = dir: files: map (store dir) files;
+  passMany = flag: args: [
+    flag
+    (lib.concatStringsSep "," args)
+  ];
+  repeat =
+    flag: files:
+    lib.concatMap (f: [
+      flag
+      f
+    ]) files;
+in
 {
   pi.coding-agent = {
-    extensions = [
-      ./extensions/footer.ts
-      ./extensions/temperature.ts
+    extensions = storeMany ./extensions [
+      "footer.ts"
+      "temperature.ts"
     ];
     extraArgs = [
+      # Disable resource discovery from ~/.pi/agent
+      "--no-extensions"
+      "--no-prompt-templates"
+      "--no-skills"
+      "--no-themes"
+
+      "--theme"
+      (store ./themes "kanagawa-wave.json")
+
       "--provider"
       "opencode-go"
       "--model"
       "deepseek-v4-flash:high"
     ]
-    ++ [
-      "--models"
-      (lib.concatStringsSep "," [
-        "deepseek-v4-flash"
-        "deepseek-v4-pro"
-        "minimax-m2.7"
-        "kimi-k2.6"
-      ])
-    ]
-    # Disable resource discovery from ~/.pi/agent
-    ++ [
-      "--no-extensions"
-      "--no-prompt-templates"
-      "--no-skills"
-      "--no-themes"
-    ]
-    ++ [
-      "--theme"
-      "${./themes/kanagawa-wave.json}"
+    ++ passMany "--models" [
+      "deepseek-v4-flash"
+      "deepseek-v4-pro"
+      "minimax-m2.7"
+      "kimi-k2.6"
     ]
     # Enable all built-in tools
-    ++ [
-      "--tools"
-      (lib.concatStringsSep "," [
-        "read"
-        "bash"
-        "edit"
-        "write"
-        "grep"
-        "find"
-        "ls"
-      ])
+    ++ passMany "--tools" [
+      "read"
+      "bash"
+      "edit"
+      "write"
+      "grep"
+      "find"
+      "ls"
     ]
-    ++ [
-      "--append-system-prompt"
-      "${./prompts/skill_relative_paths.md}"
-    ]
-    ++ [
-      "--append-system-prompt"
-      "${./prompts/skill_commands.md}"
-    ]
-    ++ [
-      "--append-system-prompt"
-      "${./prompts/ketch.md}"
-    ];
+    ++ repeat "--append-system-prompt" (
+      storeMany ./system_prompts [
+        "skill_relative_paths.md"
+        "skill_commands.md"
+        "ketch.md"
+      ]
+    );
   };
 }

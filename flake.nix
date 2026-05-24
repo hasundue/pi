@@ -46,11 +46,10 @@
         }
       );
       forEachSystem = f: lib.genAttrs systems (s: f packages.${s});
-      forAllSystems = f: lib.genAttrs systems (system: f system packages.${system});
     in
     {
-      apps = forAllSystems (
-        system: pkgs:
+      apps = forEachSystem (
+        pkgs:
         let
           pi = pi-nix.lib.mkCodingAgent {
             inherit pkgs;
