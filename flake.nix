@@ -54,7 +54,7 @@
         let
           pi = pi-nix.lib.mkCodingAgent {
             inherit pkgs;
-            modules = [ ./nix/pi.nix ];
+            modules = [ ./. ];
           };
         in
         {
