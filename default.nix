@@ -19,6 +19,9 @@ in
       "footer.ts"
       "temperature.ts"
     ];
+    promptTemplates = storeMany ./prompts [
+      "polish.md"
+    ];
     extraArgs = [
       # Disable resource discovery from ~/.pi/agent
       "--no-extensions"
