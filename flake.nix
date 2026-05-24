@@ -12,10 +12,7 @@
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    pi-nix = {
-      url = "github:lukasl-dev/pi.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    pi-nix.url = "github:lukasl-dev/pi.nix";
   };
 
   nixConfig = {
