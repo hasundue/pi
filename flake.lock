@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "agentskills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1779297786,
+        "narHash": "sha256-pU5bVarvjeb/s2yJBQz+6UiUpXDQ3Widr7sZ5H2M5MA=",
+        "owner": "agentskills",
+        "repo": "agentskills",
+        "rev": "5d4c1fda3f786fff826c7f56b6cb3341e7f3a911",
+        "type": "github"
+      },
+      "original": {
+        "owner": "agentskills",
+        "repo": "agentskills",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -112,6 +128,7 @@
     },
     "root": {
       "inputs": {
+        "agentskills": "agentskills",
         "git-hooks-nix": "git-hooks-nix",
         "nixpkgs": "nixpkgs",
         "pi-nix": "pi-nix",

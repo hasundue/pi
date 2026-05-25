@@ -4,6 +4,8 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
+    pi-nix.url = "github:lukasl-dev/pi.nix";
+
     git-hooks-nix = {
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -12,7 +14,11 @@
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    pi-nix.url = "github:lukasl-dev/pi.nix";
+
+    agentskills = {
+      url = "github:agentskills/agentskills";
+      flake = false;
+    };
   };
 
   nixConfig = {
@@ -24,12 +30,12 @@
 
   outputs =
     {
-      self,
       nixpkgs,
       git-hooks-nix,
       treefmt-nix,
       pi-nix,
-    }:
+      ...
+    }@inputs:
     let
       inherit (nixpkgs) lib;
       systems = [
@@ -51,6 +57,7 @@
           pi = pi-nix.lib.mkCodingAgent {
             inherit pkgs;
             modules = [ ./. ];
+            extraSpecialArgs = { inherit inputs; };
           };
         in
         {
