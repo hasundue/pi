@@ -64,20 +64,21 @@ in
       "ls"
     ];
     rules = ''
-      Agent Skills documentation — when creating, modifying, or reviewing an
-      agent skill (SKILL.md and its bundled resources), read the relevant files
-      under ${inputs.agentskills}/docs/skill-creation/:
+      Agent Skills documentation (read the relevant files when the user asks you to,
+      create, edit, fix, or review a "skill"):
 
-      - quickstart.mdx — Create first skill, overview of format and activation
-      - best-practices.mdx — Scoping, context efficiency, prescriptiveness, gotchas
-      - evaluating-skills.mdx — Eval-driven iteration with test cases and grading
-      - optimizing-descriptions.mdx — Testing and improving description triggering
-      - using-scripts.mdx — Running commands and bundling scripts in skills
+      - Root directory: ${inputs.agentskills}/docs
+        - home.mdx - overview of Agent Skills
+        - specification.mdx - complete SKILL.md format
+      - Skill Creation: ${inputs.agentskills}/docs/skill-creation
+        - quickstart.mdx — Create first skill, overview of format and activation
+        - best-practices.mdx — Scoping, context efficiency, prescriptiveness, gotchas
+        - evaluating-skills.mdx — Eval-driven iteration with test cases and grading
+        - optimizing-descriptions.mdx — Testing and improving description triggering
+        - using-scripts.mdx — Running commands and bundling scripts in skills
 
-      For complete SKILL.md format, read ${inputs.agentskills}/docs/specification.mdx.
-
-      Skill Commands - when the user types /skill:<name> [args...], pi expands it
-      into an XML block:
+      Skill Commands (when you recieve this block, follow the instructions immediately
+      and respond as if the user had typed like `/skill:<name> [args...]`):
 
       ```
       <skill name="<name>" location="/path/to/<name>/SKILL.md">
@@ -89,9 +90,8 @@ in
       [args...] (optional)
       ```
 
-      When you see this block, follow the instructions immediately and respond as if
-      the user had typed `/skill:<name> [args...]`. You have already read the skill
-      content, so do not use the read tool on the skill file in this case.
+      In this context, you have already read the skill content, so do not use the read
+      tool on the skill file.
     '';
   };
 }
