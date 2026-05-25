@@ -1,6 +1,6 @@
 ---
 name: exa-search
-description: |
+description: >
   Web search and content extraction via the Exa AI search API. Use for real-time web
   search, documentation lookups, API reference searches, code example discovery,
   content extraction from known URLs, and structured data extraction.
@@ -10,6 +10,12 @@ description: |
 
 Neural web search and content extraction powered by [Exa](https://exa.ai). Uses
 the official `exa-js` SDK (pinned to `2.12.1`) via Deno helper scripts.
+
+## Important Notes
+
+`scripts/search.ts` and `scripts/fetch.ts` have executable shebangs with
+appropriate permissions for `deno`. Run them directly by their fully-resolved
+paths. Do not prepend `deno run`.
 
 ## Setup
 
