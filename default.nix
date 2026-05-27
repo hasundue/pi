@@ -1,4 +1,5 @@
 {
+  pkgs,
   lib,
   inputs,
   ...
@@ -29,8 +30,9 @@ in
     promptTemplates = storeMany ./prompts [
       "polish.md"
     ];
-    skills = storeMany ./skills [
-      "ketch"
+    skills = [
+      ./skills/agent-skills
+      ./skills/ketch
     ];
     extraArgs = [
       # Disable resource discovery from ~/.pi/agent
@@ -62,36 +64,11 @@ in
       "grep"
       "find"
       "ls"
-    ];
-    rules = ''
-      Agent Skills documentation (read the relevant files when the user asks you to,
-      create, edit, fix, or review a "skill"):
-
-      - Root directory: ${inputs.agentskills}/docs
-        - home.mdx - overview of Agent Skills
-        - specification.mdx - complete SKILL.md format
-      - Skill Creation: ${inputs.agentskills}/docs/skill-creation
-        - quickstart.mdx — Create first skill, overview of format and activation
-        - best-practices.mdx — Scoping, context efficiency, prescriptiveness, gotchas
-        - evaluating-skills.mdx — Eval-driven iteration with test cases and grading
-        - optimizing-descriptions.mdx — Testing and improving description triggering
-        - using-scripts.mdx — Running commands and bundling scripts in skills
-
-      Skill Commands (when you recieve this block, follow the instructions immediately
-      and respond as if the user had typed like `/skill:<name> [args...]`):
-
-      ```
-      <skill name="<name>" location="/path/to/<name>/SKILL.md">
-      [system guidance from pi]
-
-      [instructions in SKILL.md]
-      </skill>
-
-      [args...] (optional)
-      ```
-
-      In this context, you have already read the skill content, so do not use the read
-      tool on the skill file.
-    '';
+    ]
+    ++ repeat "--append-system-prompt" (
+      storeMany ./context [
+        "skill_commands.md"
+      ]
+    );
   };
 }
