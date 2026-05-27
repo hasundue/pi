@@ -22,6 +22,10 @@ let
     ]) files;
 in
 {
+  imports = [
+    ./skills/agent-skills
+  ];
+
   pi.coding-agent = {
     extensions = storeMany ./extensions [
       "footer.ts"
@@ -31,7 +35,6 @@ in
       "polish.md"
     ];
     skills = [
-      ./skills/agent-skills
       ./skills/ketch
     ];
     extraArgs = [
