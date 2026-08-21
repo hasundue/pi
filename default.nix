@@ -1,7 +1,5 @@
 {
-  pkgs,
   lib,
-  inputs,
   ...
 }:
 let
@@ -54,9 +52,8 @@ in
     ]
     ++ passMany "--models" [
       "deepseek-v4-flash"
-      "deepseek-v4-pro"
-      "minimax-m2.7"
-      "kimi-k2.6"
+      "hy3"
+      "minimax-m3"
     ]
     # Enable all built-in tools
     ++ passMany "--tools" [
