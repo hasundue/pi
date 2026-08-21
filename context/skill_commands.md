@@ -3,7 +3,7 @@ and respond as if the user had typed like `/skill:<name> [args...]`):
 
 ```
 <skill name="<name>" location="/path/to/<name>/SKILL.md">
-[system guidance from pi]
+References are relative to <baseDir>.
 
 [instructions in SKILL.md]
 </skill>
