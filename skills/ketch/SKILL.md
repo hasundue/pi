@@ -62,6 +62,12 @@ ketch search "query" --backend searxng
 # Supported backends: brave (default), ddg (zero config), searxng (self-hosted)
 ```
 
+> **Rate limits — do not call in parallel.** The default `brave` backend is
+> rate-limited (~1 request/second plus a monthly query quota). **Never issue
+> multiple `ketch search` calls concurrently** — run them sequentially or space
+> them out. If you get a `brave: rate limited` (HTTP 429) error, wait a moment
+> and retry, or fall back with `--backend ddg`.
+
 ---
 
 ### Scrape a URL
@@ -252,11 +258,11 @@ Example output:
 
 ### Search Backends
 
-| Backend   | Setup                | Notes                         |
-| --------- | -------------------- | ----------------------------- |
-| `brave`   | Free API key         | Stable JSON API (default)     |
-| `ddg`     | Zero config          | Rate-limited by DDG currently |
-| `searxng` | Self-hosted instance | Most reliable for heavy use   |
+| Backend   | Setup                | Notes                                                                                                                          |
+| --------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `brave`   | Free API key         | Stable JSON API (default). Rate-limited (~1 req/s + monthly quota) — avoid parallel calls; on 429 retry or fall back to `ddg`. |
+| `ddg`     | Zero config          | Rate-limited by DDG currently                                                                                                  |
+| `searxng` | Self-hosted instance | Most reliable for heavy use                                                                                                    |
 
 ### Code Backends
 
