@@ -11,13 +11,6 @@ let
     flag
     (lib.concatStringsSep "," args)
   ];
-  # Helper function to repeat a flag for multiple files, e.g. --extension file1 --extension file2
-  repeat =
-    flag: files:
-    lib.concatMap (f: [
-      flag
-      f
-    ]) files;
 in
 {
   imports = [
@@ -26,7 +19,7 @@ in
 
   pi.coding-agent = {
     extensions = storeMany ./extensions [
-      "footer.ts"
+      # "footer.ts"
       "temperature.ts"
     ];
     promptTemplates = storeMany ./prompts [
@@ -35,25 +28,29 @@ in
     skills = [
       ./skills/ketch
     ];
+    themes = [
+      ./themes/kanagawa-wave.json
+    ];
+    rules = ./context/rules.md;
     extraArgs = [
-      # Disable resource discovery from ~/.pi/agent
+      # Disable resource discovery from ~/.pi/agent and built-in extensions
       "--no-extensions"
       "--no-prompt-templates"
       "--no-skills"
       "--no-themes"
 
-      "--theme"
-      (store ./themes "kanagawa-wave.json")
+      "--use-theme"
+      "kanagawa-wave"
 
       "--provider"
       "opencode-go"
       "--model"
-      "deepseek-v4-flash:high"
+      "deepseek-v4.1-flash:high"
     ]
     ++ passMany "--models" [
-      "deepseek-v4-flash"
-      "hy3"
-      "minimax-m3"
+      "opencode-go/deepseek-v4.1-flash"
+      "opencode-go/hy3"
+      "opencode-go/minimax-m3"
     ]
     # Enable all built-in tools
     ++ passMany "--tools" [
@@ -64,11 +61,6 @@ in
       "grep"
       "find"
       "ls"
-    ]
-    ++ repeat "--append-system-prompt" (
-      storeMany ./context [
-        "skill_commands.md"
-      ]
-    );
+    ];
   };
 }

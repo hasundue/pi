@@ -1,4 +1,4 @@
-Skill Commands (when you recieve this block, follow the instructions immediately
+Skill Commands (when you receive this block, follow the instructions immediately
 and respond as if the user had typed like `/skill:<name> [args...]`):
 
 ```
